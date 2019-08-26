@@ -39,7 +39,9 @@ class BaseOptions():
 
         #TODO(hkwon214): added parameters
         self.parser.add_argument('--dataset', type=str, default='MRI_Post', help='chooses how datasets are loaded. [MRI_Post]')
-
+        self.parser.add_argument('--spatial_size', default=256, type=int, help='Height and width of inputs')
+        self.parser.add_argument('--norm_value', default=255, type=int, help='Divide inputs by 255 or 1')
+        self.parser.add_argument('--sample_duration', default=80, type=int, help='Temporal duration of inputs')
         self.initialized = True
 
     def parse(self):
