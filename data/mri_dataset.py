@@ -12,7 +12,7 @@ import functools
 import json
 import copy
 from data.base_dataset import BaseDataset, get_transform
-from data.image_folder import make_dataset
+#from data.image_folder import make_dataset
 
 from datasets.rotations import x_rotmat, y_rotmat, z_rotmat
 from datasets.transformations import rotation_matrix, translation_matrix
