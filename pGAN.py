@@ -38,7 +38,7 @@ def train():
         'target': ClassLabel()
     }  
     data_loader = load.get_data_loaders(opt, train_transforms, validation_transforms)
-    dataset = data_loaders['train']
+    dataset = data_loader['train']
     dataset_size = len(dataset)
     print('The number of training images = %d' % dataset_size)
     #########################################################################################
