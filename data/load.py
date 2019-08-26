@@ -137,7 +137,7 @@ def get_data_loaders(opt, train_transforms, validation_transforms=None):
 
     data_loaders['train'] = DataLoader(
         dataset_train, opt.batchSize, shuffle=not opt.serial_batches,
-        num_workers=int(opt.num_threads))
+        num_workers=int(opt.nThreads))
 
     dataset_test = get_validation_set(
             opt, validation_transforms['spatial'],
@@ -149,7 +149,7 @@ def get_data_loaders(opt, train_transforms, validation_transforms=None):
 
     data_loaders['test'] = DataLoader(
         dataset_test, opt.batchSize, shuffle=not opt.serial_batches,
-        num_workers=int(opt.num_threads))
+        num_workers=int(opt.nThreads))
 
 
 
