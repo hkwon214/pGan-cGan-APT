@@ -50,7 +50,7 @@ class MRI(data.Dataset):
     #              temporal_transform=None,
     #              target_transform=None):
     def __init__(self, opt,     spatial_transform=None, temporal_transform=None,target_transform=None):
-        BaseDataset.__init__(self, opt)
+        #BaseDataset.__init__(self, opt)
 
         self.transform  = transforms.Compose([ToTensor()])
         self.dir = os.path.join(opt.dataroot, opt.phase)
