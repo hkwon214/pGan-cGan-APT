@@ -39,8 +39,8 @@ def get_validation_set(opt, spatial_transform, temporal_transform, target_transf
     assert opt.dataset in ['MRI_Post','kinetics', 'activitynet', 'ucf101', 'blender']
 
     # Disable evaluation
-    if opt.no_eval:
-        return None
+    # if opt.no_eval:
+    #     return None
 
     if opt.dataset == 'MRI_Post':
 
@@ -155,16 +155,16 @@ def get_data_loaders(opt, train_transforms, validation_transforms=None):
 
     print('Found {} training examples'.format(len(dataset_train)))
 
-    if not opt.no_eval and validation_transforms:
+    # if not opt.no_eval and validation_transforms:
 
-        dataset_validation = get_validation_set(
-            opt, validation_transforms['spatial'],
-            validation_transforms['temporal'], validation_transforms['target'])
+    #     dataset_validation = get_validation_set(
+    #         opt, validation_transforms['spatial'],
+    #         validation_transforms['temporal'], validation_transforms['target'])
 
-        print('Found {} validation examples'.format(len(dataset_validation)))
+    #     print('Found {} validation examples'.format(len(dataset_validation)))
 
-        data_loaders['validation'] = DataLoader(
-            dataset_validation, opt.batchSize, shuffle=True,
-            num_workers=opt.num_workers, pin_memory=True)
+    #     data_loaders['validation'] = DataLoader(
+    #         dataset_validation, opt.batchSize, shuffle=True,
+    #         num_workers=opt.num_workers, pin_memory=True)
 
     return data_loaders
