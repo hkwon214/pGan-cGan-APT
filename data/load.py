@@ -136,7 +136,7 @@ def get_data_loaders(opt, train_transforms, validation_transforms=None):
     #     train_transforms['temporal'], train_transforms['target'])
 
     data_loaders['train'] = DataLoader(
-        dataset_train, opt.batch_size, shuffle=not opt.serial_batches,
+        dataset_train, opt.batchSize, shuffle=not opt.serial_batches,
         num_workers=int(opt.num_threads))
 
     dataset_test = get_validation_set(
@@ -148,7 +148,7 @@ def get_data_loaders(opt, train_transforms, validation_transforms=None):
     #     train_transforms['temporal'], train_transforms['target'])
 
     data_loaders['test'] = DataLoader(
-        dataset_test, opt.batch_size, shuffle=not opt.serial_batches,
+        dataset_test, opt.batchSize, shuffle=not opt.serial_batches,
         num_workers=int(opt.num_threads))
 
 
@@ -164,7 +164,7 @@ def get_data_loaders(opt, train_transforms, validation_transforms=None):
         print('Found {} validation examples'.format(len(dataset_validation)))
 
         data_loaders['validation'] = DataLoader(
-            dataset_validation, opt.batch_size, shuffle=True,
+            dataset_validation, opt.batchSize, shuffle=True,
             num_workers=opt.num_workers, pin_memory=True)
 
     return data_loaders
