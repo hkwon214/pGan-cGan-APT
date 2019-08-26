@@ -38,8 +38,8 @@ class BaseOptions():
         self.parser.add_argument('--init_type', type=str, default='normal', help='network initialization [normal|xavier|kaiming|orthogonal]')
 
         #TODO(hkwon214): added parameters
-        parser.add_argument('--dataset', type=str, default='MRI_Post', help='chooses how datasets are loaded. [MRI_Post]')
-        
+        self.parser.add_argument('--dataset', type=str, default='MRI_Post', help='chooses how datasets are loaded. [MRI_Post]')
+
         self.initialized = True
 
     def parse(self):
