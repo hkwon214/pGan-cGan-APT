@@ -144,10 +144,14 @@ class cGAN(BaseModel):
         self.rec_A = rec_A.data
         self.rec_B = rec_B.data
 
-        self.loss_G_A = loss_G_A.data[0]
-        self.loss_G_B = loss_G_B.data[0]
-        self.loss_cycle_A = loss_cycle_A.data[0]
-        self.loss_cycle_B = loss_cycle_B.data[0]
+        # self.loss_G_A = loss_G_A.data[0]
+        # self.loss_G_B = loss_G_B.data[0]
+        # self.loss_cycle_A = loss_cycle_A.data[0]
+        # self.loss_cycle_B = loss_cycle_B.data[0]
+        self.loss_G_A = loss_G_A.item()
+        self.loss_G_B = loss_G_B.item()
+        self.loss_cycle_A = loss_cycle_A.item()
+        self.loss_cycle_B = loss_cycle_B.item()
 
     def optimize_parameters(self):
         # forward
