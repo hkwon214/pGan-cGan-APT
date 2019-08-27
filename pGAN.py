@@ -97,6 +97,14 @@ def test():
     from models import create_model
     from util.visualizer import Visualizer
     from util import html
+
+    #TODO(hkwon214): delete unecessary options
+    import data.load as load
+    from transforms.spatial_transforms import Compose, Normalize, RandomHorizontalFlip, MultiScaleRandomCrop, ToTensor, \
+        CenterCrop
+    from transforms.temporal_transforms import TemporalRandomCrop
+    from transforms.target_transforms import ClassLabel
+
     
     
     opt = TestOptions().parse()
