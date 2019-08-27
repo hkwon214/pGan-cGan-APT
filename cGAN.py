@@ -4,13 +4,46 @@ def train():
     from data import CreateDataLoader
     from models import create_model
     from util.visualizer import Visualizer
+
+    #TODO(hkwon214): delete unecessary options
+    import data.load as load
+    from transforms.spatial_transforms import Compose, Normalize, RandomHorizontalFlip, MultiScaleRandomCrop, ToTensor, \
+        CenterCrop
+    from transforms.temporal_transforms import TemporalRandomCrop
+    from transforms.target_transforms import ClassLabel
+
+
     opt = TrainOptions().parse()
     model = create_model(opt)
     #Loading data
-    data_loader = CreateDataLoader(opt)
-    dataset = data_loader.load_data()
-    dataset_size = len(data_loader)
-    print('Training images = %d' % dataset_size)    
+    # data_loader = CreateDataLoader(opt)
+    # dataset = data_loader.load_data()
+    # dataset_size = len(data_loader)
+    # print('Training images = %d' % dataset_size)    
+    
+    ####################################################################
+    #TODO(hkwon214): organize dataloader
+    train_transforms = {
+        'spatial': Compose([MultiScaleRandomCrop(1, opt.spatial_size),
+                            RandomHorizontalFlip(),
+                            ToTensor(opt.norm_value)]),
+        'temporal': TemporalRandomCrop(opt.sample_duration),
+        'target': ClassLabel()
+    }
+
+
+    validation_transforms = {
+        'spatial': Compose([CenterCrop(224),
+                            ToTensor(opt.norm_value)]),
+        'temporal': TemporalRandomCrop(opt.sample_duration),
+        'target': ClassLabel()
+    }  
+    data_loader = load.get_data_loaders(opt, train_transforms, validation_transforms)
+    dataset = data_loader['train']
+    dataset_size = len(dataset)
+    print('The number of training images = %d' % dataset_size)
+    #########################################################################################
+
     visualizer = Visualizer(opt)
     total_steps = 0
     #Starts training
@@ -65,6 +98,13 @@ def test():
     from models import create_model
     from util.visualizer import Visualizer
     from util import html
+    #TODO(hkwon214): delete unecessary options
+    import data.load as load
+    from transforms.spatial_transforms import Compose, Normalize, RandomHorizontalFlip, MultiScaleRandomCrop, ToTensor, \
+        CenterCrop
+    from transforms.temporal_transforms import TemporalRandomCrop
+    from transforms.target_transforms import ClassLabel
+
     
     
     opt = TestOptions().parse()
@@ -73,8 +113,32 @@ def test():
     opt.serial_batches = True  # no shuffle
 
     
-    data_loader = CreateDataLoader(opt)
-    dataset = data_loader.load_data()
+    # data_loader = CreateDataLoader(opt)
+    # dataset = data_loader.load_data()
+
+    ####################################################################
+    #TODO(hkwon214): organize dataloader
+    train_transforms = {
+        'spatial': Compose([MultiScaleRandomCrop(1, opt.spatial_size),
+                            RandomHorizontalFlip(),
+                            ToTensor(opt.norm_value)]),
+        'temporal': TemporalRandomCrop(opt.sample_duration),
+        'target': ClassLabel()
+    }
+
+
+    validation_transforms = {
+        'spatial': Compose([CenterCrop(224),
+                            ToTensor(opt.norm_value)]),
+        'temporal': TemporalRandomCrop(opt.sample_duration),
+        'target': ClassLabel()
+    }  
+    data_loader = load.get_data_loaders(opt, train_transforms, validation_transforms)
+    dataset = data_loader['train']
+    dataset_size = len(dataset)
+    print('The number of training images = %d' % dataset_size)
+    #########################################################################################
+
     model = create_model(opt)
     visualizer = Visualizer(opt)
     # create website
