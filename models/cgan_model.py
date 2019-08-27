@@ -108,12 +108,14 @@ class cGAN(BaseModel):
     def backward_D_A(self):
         fake_B = self.fake_B_pool.query(self.fake_B)
         loss_D_A = self.backward_D_basic(self.netD_A, self.real_B, fake_B)
-        self.loss_D_A = loss_D_A.data[0]
+        #self.loss_D_A = loss_D_A.data[0]
+        self.loss_D_A = loss_D_A.item()
 
     def backward_D_B(self):
         fake_A = self.fake_A_pool.query(self.fake_A)
         loss_D_B = self.backward_D_basic(self.netD_B, self.real_A, fake_A)
-        self.loss_D_B = loss_D_B.data[0]
+        #self.loss_D_B = loss_D_B.data[0]
+        self.loss_D_B = loss_D_B.item()
 
     def backward_G(self):
         lambda_A = self.opt.lambda_A
