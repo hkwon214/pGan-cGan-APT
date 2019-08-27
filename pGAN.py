@@ -105,8 +105,32 @@ def test():
     opt.serial_batches = True  # no shuffle
 
     
-    data_loader = CreateDataLoader(opt)
-    dataset = data_loader.load_data()
+    # data_loader = CreateDataLoader(opt)
+    # dataset = data_loader.load_data()
+    #################################################################################
+    # custom data loader
+    #TODO(hkwon214): organize dataloader
+    train_transforms = {
+        'spatial': Compose([MultiScaleRandomCrop(1, opt.spatial_size),
+                            RandomHorizontalFlip(),
+                            ToTensor(opt.norm_value)]),
+        'temporal': TemporalRandomCrop(opt.sample_duration),
+        'target': ClassLabel()
+    }
+
+
+    validation_transforms = {
+        'spatial': Compose([CenterCrop(224),
+                            ToTensor(opt.norm_value)]),
+        'temporal': TemporalRandomCrop(opt.sample_duration),
+        'target': ClassLabel()
+    }  
+    data_loader = load.get_data_loaders(opt, train_transforms, validation_transforms)
+    dataset = data_loader['train']
+    dataset_size = len(dataset)
+    print('The number of testing images = %d' % dataset_size)
+    ###########################################################################
+
     model = create_model(opt)
     visualizer = Visualizer(opt)
     # create website
