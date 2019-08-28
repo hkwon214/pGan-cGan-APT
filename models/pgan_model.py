@@ -57,24 +57,29 @@ class pGAN(BaseModel):
         AtoB = self.opt.which_direction == 'AtoB'
         input_A = input['A' if AtoB else 'B']
         input_B = input['B' if AtoB else 'A']
+        input_C = input['C']
         if len(self.gpu_ids) > 0:
             input_A = input_A.cuda(self.gpu_ids[0], async=True)
             input_B = input_B.cuda(self.gpu_ids[0], async=True)
+            input_C = input_C.cuda(self.gpu_ids[0], async=True)
         self.input_A = input_A
         self.input_B = input_B
+        self.input_C = input_C
         self.image_paths = input['A_paths' if AtoB else 'B_paths']
+        self.image_paths_mask = input['C_paths']
 
     def forward(self):
         self.real_A = Variable(self.input_A)
         self.fake_B = self.netG(self.real_A)
         self.real_B = Variable(self.input_B)
-
+        self.mask = Variable(self.input_C)
     
     def test(self):
         # no backprop gradients
         self.real_A = Variable(self.input_A, volatile=True)
         self.fake_B = self.netG(self.real_A)
         self.real_B = Variable(self.input_B, volatile=True)
+        self.mask = Variable(self.input_C, volatile=True)
 
     # get image paths
     def get_image_paths(self):
@@ -111,7 +116,12 @@ class pGAN(BaseModel):
         self.VGG_fake=self.vgg(self.fake_B.expand([int(self.real_B.size()[0]),3,int(self.real_B.size()[2]),int(self.real_B.size()[3])]))[0]
         self.VGG_loss=self.criterionL1(self.VGG_fake,self.VGG_real)* self.opt.lambda_vgg
         
-        self.loss_G = self.loss_G_GAN + self.loss_G_L1 + self.VGG_loss
+        #TODO(hkwon214): added loss for 
+        fake_AB_mask = torch.cat((self.real_A*self.mask, self.fake_B*self.mask), 1)
+        pred_fake_mask = self.netD(fake_AB)
+        self.loss_GAN_mask = self.criterionGAN(pred_fake_mask, True)*self.opt.lambda_adv
+
+        self.loss_G = self.loss_G_GAN + self.loss_G_L1 + self.VGG_loss + self.loss_GAN_mask
         
         self.loss_G.backward()
 
@@ -136,6 +146,7 @@ class pGAN(BaseModel):
         return OrderedDict([('G_GAN', self.loss_G_GAN.item()),
                     ('G_L1', self.loss_G_L1.item()),
                     ('G_VGG', self.VGG_loss.item()),
+                    ('G_GAN_mask', self.loss_GAN_mask.item()),
                     ('D_real', self.loss_D_real.item()),
                     ('D_fake', self.loss_D_fake.item())
                     ])

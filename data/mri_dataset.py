@@ -90,7 +90,7 @@ class MRI(data.Dataset):
         running_instance = os.path.join(self.dir,self.data_paths[index])
         array_3d = np.zeros([4,256,256]).astype(np.float32)
         target_array= np.zeros([1,256,256]).astype(np.float32)
-        sequences = ['apt.nii','T1.nii','T1c.nii','T2.nii','FLAIR.nii']
+        sequences = ['apt.nii','T1.nii','T1c.nii','T2.nii','Flair.nii','mask.nii']
         degree = random.random()*360
 
         for sequence in sequences:
@@ -101,10 +101,20 @@ class MRI(data.Dataset):
                 #if self.phase == 'train':
                  #   array = rotate(array, degree, resize=False)
                 array = array * 2 - 1
+                
                 target_array[0,:,:] = array
                 filename = self.data_paths[index] + '_' + 'gt'
                 B_paths = os.path.join(running_instance, filename)
                 np.save(B_paths, target_array) 
+            
+            elif sequence == 'mask.nii':
+                sequence_path = os.path.join(running_instance,self.data_paths[index]+'_'+sequence) 
+                target = nib.load(sequence_path)
+                mask = target.get_fdata().astype(np.float32)
+                filename = self.data_paths[index] + '_' + 'mask'
+                C_paths = os.path.join(running_instance, filename)
+                np.save(C_paths, target_array) 
+            
                 
             else:
                 if sequence == 'apt.nii':
@@ -113,7 +123,7 @@ class MRI(data.Dataset):
                     count = 1
                 elif sequence == 'T2.nii':
                     count = 2
-                elif sequence == 'FLAIR.nii':
+                elif sequence == 'Flair.nii':
                     count = 3
                     #print('INSIDE')
                 sequence_path = os.path.join(running_instance,self.data_paths[index]+'_'+sequence) 
@@ -135,7 +145,8 @@ class MRI(data.Dataset):
         A = self.transform(array_3d)
         #B = self.transform(array)
         B = self.transform(target_array)
+        C = self.transform(mask)
 
-        data = {'A':A, 'B':B, 'A_paths': A_paths ,'B_paths': B_paths}
+        data = {'A':A, 'B':B, 'C':C, 'A_paths': A_paths ,'B_paths': B_paths,'C_paths': C_paths}
 
         return data
