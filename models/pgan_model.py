@@ -119,7 +119,7 @@ class pGAN(BaseModel):
         #TODO(hkwon214): added loss for 
         print('self.mask: ' + str(self.mask.size()))
         fake_AB_mask = torch.cat((self.real_A*self.mask, self.fake_B*self.mask), 1)
-        pred_fake_mask = self.netD(fake_AB)
+        pred_fake_mask = self.netD(fake_AB_mask)
         self.loss_GAN_mask = self.criterionGAN(pred_fake_mask, True)*self.opt.lambda_adv
 
         self.loss_G = self.loss_G_GAN + self.loss_G_L1 + self.VGG_loss + self.loss_GAN_mask

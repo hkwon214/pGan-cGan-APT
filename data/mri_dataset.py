@@ -111,6 +111,7 @@ class MRI(data.Dataset):
                 sequence_path = os.path.join(running_instance,self.data_paths[index]+'_'+sequence) 
                 target = nib.load(sequence_path)
                 mask = target.get_fdata().astype(np.float32)
+                mask[np.where(mask>0)]=1
                 filename = self.data_paths[index] + '_' + 'mask'
                 C_paths = os.path.join(running_instance, filename)
                 np.save(C_paths, target_array) 
