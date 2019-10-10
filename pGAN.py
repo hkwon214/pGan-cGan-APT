@@ -51,6 +51,7 @@ def train():
         iter_data_time = time.time()
         epoch_iter = 0
         for i, data in enumerate(dataset):
+            print(data)
             iter_start_time = time.time()
             if total_steps % opt.print_freq == 0:
                 t_data = iter_start_time - iter_data_time
