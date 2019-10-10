@@ -97,7 +97,7 @@ class MRI(data.Dataset):
 
         for sequence in sequences:
             if sequence == 'T1c.nii':
-                sequence_path = os.path.join(running_instance,self.data_paths[index]+'_'+sequence) 
+                sequence_path = os.path.join(running_instance,self.data_paths[index]+'_'+sequence+'.nii') 
                 target = nib.load(sequence_path)
                 array = target.get_fdata().astype(np.float32)
                 #if self.phase == 'train':
