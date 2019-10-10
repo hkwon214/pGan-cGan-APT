@@ -88,9 +88,11 @@ class MRI(data.Dataset):
         # img_parts = img.split('_')
         # running_instance = os.path.join(self.root,label,img_parts[0]+'_'+img_parts[1]+'_')
         running_instance = os.path.join(self.dir,self.data_paths[index])
-        array_3d = np.zeros([4,256,256]).astype(np.float32)
+        #array_3d = np.zeros([4,256,256]).astype(np.float32)
+        array_3d = np.zeros([1,256,256]).astype(np.float32)
         target_array= np.zeros([1,256,256]).astype(np.float32)
-        sequences = ['apt.nii','T1.nii','T1c.nii','T2.nii','Flair.nii','mask.nii']
+        #sequences = ['apt.nii','T1.nii','T1c.nii','T2.nii','Flair.nii','mask.nii']
+        sequences = ['T1.nii','T1c']
         degree = random.random()*360
 
         for sequence in sequences:
@@ -119,9 +121,9 @@ class MRI(data.Dataset):
                 
             else:
                 if sequence == 'apt.nii':
-                    count = 0
-                elif sequence == 'T1.nii':
                     count = 1
+                elif sequence == 'T1.nii':
+                    count = 0
                 elif sequence == 'T2.nii':
                     count = 2
                 elif sequence == 'Flair.nii':
