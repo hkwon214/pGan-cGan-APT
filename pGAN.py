@@ -13,8 +13,10 @@ def train():
     #############################
     data_loader = load.getDataloader(opt)
     dataset = data_loader['train']
+    #dataset = data_loader
+    print('DATASET'+str(dataset))
     #############################
-    dataset_size = len(data_loader)
+    dataset_size = len(dataset)
     print('Training images = %d' % dataset_size)    
     visualizer = Visualizer(opt)
     total_steps = 0
@@ -23,7 +25,9 @@ def train():
         epoch_start_time = time.time()
         iter_data_time = time.time()
         epoch_iter = 0
+        
         for i, data in enumerate(dataset):
+            
             iter_start_time = time.time()
             if total_steps % opt.print_freq == 0:
                 t_data = iter_start_time - iter_data_time
@@ -70,6 +74,7 @@ def test():
     from models import create_model
     from util.visualizer import Visualizer
     from util import html
+    import data.load_data as load
     
     
     opt = TestOptions().parse()
@@ -77,9 +82,10 @@ def test():
     opt.batchSize = 1  # test code only supports batchSize = 1
     opt.serial_batches = True  # no shuffle
 
-    
-    data_loader = CreateDataLoader(opt)
-    dataset = data_loader.load_data()
+    data_loader = load.getDataloader(opt)
+    dataset = data_loader['train']
+#     data_loader = CreateDataLoader(opt)
+#     dataset = data_loader.load_data()
     model = create_model(opt)
     visualizer = Visualizer(opt)
     # create website

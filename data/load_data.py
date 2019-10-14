@@ -5,21 +5,20 @@ from __future__ import print_function
 from datetime import datetime
 import torch
 
-from transforms.spatial_transforms import Normalize
 from torch.utils.data import DataLoader
 
 from data.mri_data import MRI
 
 def getData(opt, dataType):
-    assert opt.dataset in ['MriPost', 'MriPre']
+    assert opt.dataset in ['mriPost', 'mriPre']
     if dataType == 'train':
-        if opt.dataset == 'MriPost':
+        if opt.dataset == 'mriPost':
             data = MRI(opt)
     elif dataType == 'test':
-        if opt.dataset == 'MriPost':
+        if opt.dataset == 'mriPost':
             data = MRI(opt)
     elif dataType == 'validation':
-        if opt.dataset == 'MriPost':
+        if opt.dataset == 'mriPost':
             data = MRI(opt)
     return data
 

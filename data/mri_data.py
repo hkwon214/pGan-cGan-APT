@@ -11,8 +11,7 @@ import math
 import functools
 import json
 import copy
-from data.base_dataset import BaseDataset, get_params, get_transform
-from data.image_folder import make_dataset
+from data.base_dataset import BaseDataset, get_transform
 
 import scipy
 from scipy.ndimage import affine_transform, map_coordinates
@@ -26,7 +25,10 @@ class ToTensor(object):
 class MRI(data.Dataset):
 
     def __init__(self, opt):
-        BaseDataset.__init__(self, opt)
+        #BaseDataset.__init__(self, opt)
+#         self.transform  = transforms.Compose([transforms.RandomResizedCrop(224),
+#                                               transforms.RandomHorizontalFlip(),
+#                                               ToTensor()])
         self.transform  = transforms.Compose([ToTensor()])
         self.dir = os.path.join(opt.dataroot, opt.phase)
         self.data_paths = [o for o in os.listdir(self.dir)  if os.path.isdir(os.path.join(self.dir, o))]
@@ -50,7 +52,7 @@ class MRI(data.Dataset):
 
         # Ground Truth
         gtPath = os.path.join(running_instance,self.data_paths[index] + '_' + groundTruth) 
-        target = nib.load(sequence_path)
+        target = nib.load(gtPath)
         array = target.get_fdata().astype(np.float32)
 
         array = array * 2 - 1
@@ -61,11 +63,14 @@ class MRI(data.Dataset):
 
         # Input Sequences
         if n == 1:
-            sequence_path = os.path.join(running_instance,self.data_paths[index]+'_'+sequence) 
+            sequence_path = os.path.join(running_instance,self.data_paths[index]+'_'+inputSeq[0]) 
             img = nib.load(sequence_path)
             data = img.get_fdata().astype(np.float32)
             data = data*2-1
             inputArray[0,:,:] = data
+            filename = self.data_paths[index] + '_' + 'input'
+            A_paths = os.path.join(running_instance, filename)
+            np.save(A_paths, inputArray) 
         else:
             for sequence in inputSeq:
                 if sequence == 'apt.nii':
@@ -82,20 +87,18 @@ class MRI(data.Dataset):
                 data = data*2-1
                 inputArray[count,:,:] = data
 
-        filename = self.data_paths[index] + '_' + 'input'
-        A_paths = os.path.join(running_instance, filename)
-        np.save(A_paths, inputArray) 
+            filename = self.data_paths[index] + '_' + 'input'
+            A_paths = os.path.join(running_instance, filename)
+            np.save(A_paths, inputArray) 
 
         # apply the same transform to both A and B
         # TODO: change transformation for input=4
+#         A =  np.moveaxis(inputArray,0,-1)
+#         B =  np.moveaxis(gtArray,0,-1)
         A = inputArray
         B = gtArray
-        transform_params = get_params(self.opt, B.size)
-        A_transform = get_transform(self.opt, transform_params, grayscale=(self.input_nc == 1))
-        B_transform = get_transform(self.opt, transform_params, grayscale=(self.output_nc == 1))
-
-        A = A_transform(A)
-        B = B_transform(B)
+        A = self.transform(A)
+        B = self.transform(B)
 
         data = {'A':A, 'B':B, 'A_paths': A_paths ,'B_paths': B_paths}
 

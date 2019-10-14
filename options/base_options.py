@@ -38,6 +38,7 @@ class BaseOptions():
         self.parser.add_argument('--init_type', type=str, default='normal', help='network initialization [normal|xavier|kaiming|orthogonal]')
         # Added Parameters
         self.parser.add_argument('--dataset', type=str, default='mriPost', help='chooses how datasets are loaded. [mriPost]')
+        self.parser.add_argument('--no_eval', action='store_true', help='if true, add validation set')
         self.initialized = True
 
     def parse(self):

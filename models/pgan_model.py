@@ -127,11 +127,11 @@ class pGAN(BaseModel):
         self.optimizer_G.step()
 
     def get_current_errors(self):
-        return OrderedDict([('G_GAN', self.loss_G_GAN.data[0]),
-                            ('G_L1', self.loss_G_L1.data[0]),
-                            ('G_VGG', self.VGG_loss.data[0]),
-                            ('D_real', self.loss_D_real.data[0]),
-                            ('D_fake', self.loss_D_fake.data[0])
+        return OrderedDict([('G_GAN', self.loss_G_GAN.item()),
+                            ('G_L1', self.loss_G_L1.item()),
+                            ('G_VGG', self.VGG_loss.item()),
+                            ('D_real', self.loss_D_real.item()),
+                            ('D_fake', self.loss_D_fake.item())
                             ])
 
     def get_current_visuals(self):
