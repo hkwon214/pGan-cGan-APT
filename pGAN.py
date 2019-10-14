@@ -4,11 +4,16 @@ def train():
     from data import CreateDataLoader
     from models import create_model
     from util.visualizer import Visualizer
+    import data.load_data as load
     opt = TrainOptions().parse()
     model = create_model(opt)
     #Loading data
-    data_loader = CreateDataLoader(opt)
-    dataset = data_loader.load_data()
+    # data_loader = CreateDataLoader(opt)
+    # dataset = data_loader.load_data()
+    #############################
+    data_loader = load.getDataloader(opt)
+    dataset = data_loader['train']
+    #############################
     dataset_size = len(data_loader)
     print('Training images = %d' % dataset_size)    
     visualizer = Visualizer(opt)

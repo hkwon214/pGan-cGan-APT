@@ -36,7 +36,8 @@ class BaseOptions():
         self.parser.add_argument('--max_dataset_size', type=int, default=float("inf"),
                                  help='Maximum number of samples allowed per dataset. If the dataset directory contains more than max_dataset_size, only a subset is loaded.')
         self.parser.add_argument('--init_type', type=str, default='normal', help='network initialization [normal|xavier|kaiming|orthogonal]')
-
+        # Added Parameters
+        self.parser.add_argument('--dataset', type=str, default='mriPost', help='chooses how datasets are loaded. [mriPost]')
         self.initialized = True
 
     def parse(self):
